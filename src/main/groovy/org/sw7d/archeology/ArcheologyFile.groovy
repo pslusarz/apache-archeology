@@ -1,6 +1,7 @@
 package org.sw7d.archeology
 import java.io.File
 import java.text.NumberFormat
+import java.util.regex.Matcher
 
 
 class ArcheologyFile extends File {
@@ -30,7 +31,12 @@ class ArcheologyFile extends File {
 		  lines.each {
 			  if (it.trim().startsWith('import ')) {
 				  imports << (it - 'import ' - ";" - 'static ').trim()
-			  }
+			  } else {
+                  Matcher m = it.trim() =~ /(([a-z0-9]+[\.])+[A-Z]+\w+)/
+                  if( m.find()) {
+                      imports << m[0][0]
+                  }
+              }
 		  }
 	  }
 	  return imports
