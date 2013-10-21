@@ -11,27 +11,34 @@ class ArcheologyFileTest {
     void testImportsSimpleImport() {
         mockFile.metaClass.readLines = { ['import blah.class;']}
         ArcheologyFile underTest = new ArcheologyFile(mockFile)
-        assert underTest.imports == ['blah.class']
+        assert underTest.imports == ['blah.class'] as Set
+    }
+
+    @Test
+    void testImportsSimpleImportOnlyOnce() {
+        mockFile.metaClass.readLines = { ['import blah.Class;', 'blah.Class g = new blah.Class();']}
+        ArcheologyFile underTest = new ArcheologyFile(mockFile)
+        assert underTest.imports == ['blah.Class'] as Set
     }
 
     @Test
     void testImports2SimpleImports() {
         mockFile.metaClass.readLines = { ['import blah.class;', 'import yomom']}
         ArcheologyFile underTest = new ArcheologyFile(mockFile)
-        assert underTest.imports == ['blah.class', 'yomom']
+        assert underTest.imports == ['blah.class', 'yomom'] as Set
     }
 
     @Test
     void testImplicitImport() {
         mockFile.metaClass.readLines = { ['  blah.boo123.Clazz yomom;']}
         ArcheologyFile underTest = new ArcheologyFile(mockFile)
-        assert underTest.imports == ['blah.boo123.Clazz']
+        assert underTest.imports == ['blah.boo123.Clazz'] as Set
     }
     @Test
     void testImplicitImportStaticMethodMiddleOfLine() {
         mockFile.metaClass.readLines = { [' int i = java.Math.random();']}
         ArcheologyFile underTest = new ArcheologyFile(mockFile)
-        assert underTest.imports == ['java.Math']
+        assert underTest.imports == ['java.Math'] as Set
     }
     @Test
     void testImplicitImportNoFalsePositives() {
@@ -39,7 +46,14 @@ class ArcheologyFileTest {
         'boo.property.subproperty',
         'int x = myObject.myProperty.myMethod()']}
         ArcheologyFile underTest = new ArcheologyFile(mockFile)
-        assert underTest.imports == []
+        assert underTest.imports == [] as Set
+    }
+
+    @Test
+    void testDoNotImportWhatStartsWithUppercase() {
+        mockFile.metaClass.readLines = { ['Map.Entry entry = (Map.Entry) i.next();']}
+        ArcheologyFile underTest = new ArcheologyFile(mockFile)
+        assert underTest.imports == [] as Set
     }
 
 }
