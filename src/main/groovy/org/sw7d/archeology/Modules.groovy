@@ -8,11 +8,13 @@ class Modules extends ArrayList<Module> {
     public Modules initFromFilesystem() {
         String root = '../apache-data/'
         println "reading from file system"
-        new File(root).listFiles().each { File moduleDir ->
-            Module module = new Module(name: moduleDir.name, path: moduleDir.absolutePath, repository: 'github')
-            println "  " + module.name
-            if (module.name != '.DS_Store') {
-              this << module.init()
+        new File(root).eachDir { File repository ->
+            repository.eachDir{ File moduleDir ->
+                Module module = new Module(name: moduleDir.name, path: moduleDir.absolutePath, repository: repository.name)
+                println "  " + module.name
+                if (module.name != '.DS_Store') {
+                    this << module.init()
+                }
             }
         }
         this.each { it.initLibrary(this) }

@@ -56,4 +56,19 @@ class ArcheologyFileTest {
         assert underTest.imports == [] as Set
     }
 
+    @Test
+    void testParseJavaPackage() {
+        mockFile.metaClass.readLines = { ['package org.blah.boo.moo;']}
+        ArcheologyFile underTest = new ArcheologyFile(mockFile)
+        assert underTest.javaPackage == 'org.blah.boo.moo'
+    }
+
+    @Test
+    void testJavaName() {
+        File mockFile = new File("MyNameMatters.java")
+        mockFile.metaClass.readLines = { ['package org.blah.boo.moo;']}
+        ArcheologyFile underTest = new ArcheologyFile(mockFile)
+        assert underTest.javaName() == 'org.blah.boo.moo.MyNameMatters'
+    }
+
 }

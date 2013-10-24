@@ -40,7 +40,7 @@ class Module implements Serializable{
 	  ['*No recognizable build pattern', {!it.hasAntBuild && !it.hasIvy && !it.isGrails && !it.hasAntBuildMainDir && !it.isGradle && !it.isBBv2 && !it.isStaticContent && !it.dataServicesBuild}]
   ]
 
-  static final FileFilter MEANINGFULFILES = [accept: {File it -> it.name != 'CVS' && it.name != '.DS_Store' && it.name != '.git' && it.name != '.gitignore' && it.name.toLowerCase() != 'dummy.txt'
+  static final FileFilter MEANINGFULFILES = [accept: {File it -> it.name != 'CVS' && it.name != '.DS_Store' && it.name != '.svn' && it.name != '.git' && it.name != '.gitignore' && it.name.toLowerCase() != 'dummy.txt'
   }] as FileFilter
 
   public String gname() {
